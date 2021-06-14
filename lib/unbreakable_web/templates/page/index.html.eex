@@ -1,0 +1,31 @@
+<h1 class="text-6xl text-center text-gray-700">Your current streaks</h1>
+<section class="row">
+  <hr class="my-8">
+  <div class="text-5xl ml-64">-------------------------------------------</div>
+  <p>(Consecutive days)</p>
+  <table>
+    <tr class="text-3xl my-4 text-indigo-400">
+      <td class="w-1/4">Live Streaming</td>
+      <td class="w-full pl-12"><div class="inline-block w-1/2 pl-4 bg-blue-400 text-white">32 </div></td>
+    </tr>
+    <tr class="text-3xl my-4 text-indigo-400">
+      <td>Workout</td>
+      <td class="w-full pl-12">
+        <div class="inline-block w-1/3 pl-4 bg-blue-400 text-white">8 </div>
+      </td>
+    </tr>
+    <tr class="text-3xl my-4 text-indigo-400">
+      <td>Don't eat sugar</td>
+      <td class="w-full pl-12">
+        <div class="inline-block w-1/6 pl-4 bg-blue-400 text-white">2 </div>
+      </td>
+    </tr>
+    <tr class="text-3xl my-4 text-indigo-400">
+      <td>Sleep 8 Hours</td>
+      <td class="w-full pl-12">
+        <div class="inline-block w-1/12 pl-4 bg-blue-400 text-white">1</div>
+      </td>
+    </tr>
+  </table>
+
+</section>
