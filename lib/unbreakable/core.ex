@@ -18,7 +18,7 @@ defmodule Unbreakable.Core do
 
   """
   def list_goals do
-    Repo.all(Goal)
+    Repo.all(Goal) |> Repo.preload([:statuses, :streak])
   end
 
   @doc """
@@ -35,8 +35,9 @@ defmodule Unbreakable.Core do
       ** (Ecto.NoResultsError)
 
   """
-  def get_goal!(id), do: Repo.get!(Goal, id)
-
+  def get_goal!(id) do
+    Repo.get!(Goal, id) |> Repo.preload([:statuses, :streak])
+  end
   @doc """
   Creates a goal.
 

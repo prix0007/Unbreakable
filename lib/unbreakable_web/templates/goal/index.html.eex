@@ -1,0 +1,15 @@
+
+<section class="row">
+  <hr class="my-8">
+  <p>(Consecutive days)</p>
+  <table>
+    <%= for goal <- @goals do %>
+    <tr class="text-3xl text-purple-400">
+      <td class="w-1/4"><%= goal.title%></td>
+      <td class="w-full pl-12">
+        <div class="inline-block my-1 pl-4 bg-blue-400 rounded-r-md text-white" style="width: <%= bar_length(goal.streak.length) %>"><%= goal.streak.length %> </div>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+</section>

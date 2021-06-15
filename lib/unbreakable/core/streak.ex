@@ -4,7 +4,7 @@ defmodule Unbreakable.Core.Streak do
 
   schema "streaks" do
     field :length, :integer
-    field :goal_id, :id
+    belongs_to :goal, Unbreakable.Core.Goal
 
     timestamps()
   end

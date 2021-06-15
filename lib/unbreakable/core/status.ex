@@ -3,9 +3,9 @@ defmodule Unbreakable.Core.Status do
   import Ecto.Changeset
 
   schema "statuses" do
-    field :complete, :boolean, default: false
     field :date, :date
-    field :goal_id, :id
+    field :is_complete, :boolean, default: false
+    belongs_to :goal, Unbreakable.Core.Goal
 
     timestamps()
   end
@@ -13,7 +13,7 @@ defmodule Unbreakable.Core.Status do
   @doc false
   def changeset(status, attrs) do
     status
-    |> cast(attrs, [:date, :complete, :goal_id])
-    |> validate_required([:date, :complete, :goal_id])
+    |> cast(attrs, [:date, :is_complete, :goal_id])
+    |> validate_required([:date, :is_complete, :goal_id])
   end
 end

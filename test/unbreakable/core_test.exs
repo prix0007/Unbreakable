@@ -62,6 +62,67 @@ defmodule Unbreakable.CoreTest do
     end
   end
 
+  describe "goals" do
+    alias Unbreakable.Core.Goal
+
+    @valid_attrs %{is_active: true, title: "some title"}
+    @update_attrs %{is_active: false, title: "some updated title"}
+    @invalid_attrs %{is_active: nil, title: nil}
+
+    def goal_fixture(attrs \\ %{}) do
+      {:ok, goal} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Core.create_goal()
+
+      goal
+    end
+
+    test "list_goals/0 returns all goals" do
+      goal = goal_fixture()
+      assert Core.list_goals() == [goal]
+    end
+
+    test "get_goal!/1 returns the goal with given id" do
+      goal = goal_fixture()
+      assert Core.get_goal!(goal.id) == goal
+    end
+
+    test "create_goal/1 with valid data creates a goal" do
+      assert {:ok, %Goal{} = goal} = Core.create_goal(@valid_attrs)
+      assert goal.is_active == true
+      assert goal.title == "some title"
+    end
+
+    test "create_goal/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Core.create_goal(@invalid_attrs)
+    end
+
+    test "update_goal/2 with valid data updates the goal" do
+      goal = goal_fixture()
+      assert {:ok, %Goal{} = goal} = Core.update_goal(goal, @update_attrs)
+      assert goal.is_active == false
+      assert goal.title == "some updated title"
+    end
+
+    test "update_goal/2 with invalid data returns error changeset" do
+      goal = goal_fixture()
+      assert {:error, %Ecto.Changeset{}} = Core.update_goal(goal, @invalid_attrs)
+      assert goal == Core.get_goal!(goal.id)
+    end
+
+    test "delete_goal/1 deletes the goal" do
+      goal = goal_fixture()
+      assert {:ok, %Goal{}} = Core.delete_goal(goal)
+      assert_raise Ecto.NoResultsError, fn -> Core.get_goal!(goal.id) end
+    end
+
+    test "change_goal/1 returns a goal changeset" do
+      goal = goal_fixture()
+      assert %Ecto.Changeset{} = Core.change_goal(goal)
+    end
+  end
+
   describe "streaks" do
     alias Unbreakable.Core.Streak
 
@@ -124,9 +185,9 @@ defmodule Unbreakable.CoreTest do
   describe "statuses" do
     alias Unbreakable.Core.Status
 
-    @valid_attrs %{complete: true, date: ~D[2010-04-17]}
-    @update_attrs %{complete: false, date: ~D[2011-05-18]}
-    @invalid_attrs %{complete: nil, date: nil}
+    @valid_attrs %{date: ~D[2010-04-17], is_complete: true}
+    @update_attrs %{date: ~D[2011-05-18], is_complete: false}
+    @invalid_attrs %{date: nil, is_complete: nil}
 
     def status_fixture(attrs \\ %{}) do
       {:ok, status} =
@@ -149,8 +210,8 @@ defmodule Unbreakable.CoreTest do
 
     test "create_status/1 with valid data creates a status" do
       assert {:ok, %Status{} = status} = Core.create_status(@valid_attrs)
-      assert status.complete == true
       assert status.date == ~D[2010-04-17]
+      assert status.is_complete == true
     end
 
     test "create_status/1 with invalid data returns error changeset" do
@@ -160,8 +221,8 @@ defmodule Unbreakable.CoreTest do
     test "update_status/2 with valid data updates the status" do
       status = status_fixture()
       assert {:ok, %Status{} = status} = Core.update_status(status, @update_attrs)
-      assert status.complete == false
       assert status.date == ~D[2011-05-18]
+      assert status.is_complete == false
     end
 
     test "update_status/2 with invalid data returns error changeset" do
