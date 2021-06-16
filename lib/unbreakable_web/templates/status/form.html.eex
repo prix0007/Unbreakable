@@ -5,6 +5,11 @@
     </div>
   <% end %>
 
+
+  <%= label f, :goal_id %>
+  <%= number_input f, :goal_id %>
+  <%= error_tag f, :goal_id %>
+
   <%= label f, :date %>
   <%= date_select f, :date %>
   <%= error_tag f, :date %>
@@ -12,6 +17,7 @@
   <%= label f, :is_complete %>
   <%= checkbox f, :is_complete %>
   <%= error_tag f, :is_complete %>
+
 
   <div>
     <%= submit "Save" %>

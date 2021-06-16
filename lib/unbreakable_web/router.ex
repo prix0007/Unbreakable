@@ -18,7 +18,7 @@ defmodule UnbreakableWeb.Router do
 
     resources "/statuses", StatusController
     resources "/goals", GoalController
-    resources "/streaks", StreakController
+
     get "/", PageController, :index
   end
 
