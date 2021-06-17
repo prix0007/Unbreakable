@@ -6,7 +6,7 @@ defmodule Unbreakable.Core do
   import Ecto.Query, warn: false
   alias Unbreakable.Repo
 
-  alias Unbreakable.Core.Goal
+  alias Unbreakable.Core.{Goal, Streak}
 
   @doc """
   Returns the list of goals.
@@ -18,7 +18,14 @@ defmodule Unbreakable.Core do
 
   """
   def list_goals do
-    Repo.all(Goal) |> Repo.preload([:statuses])
+    Goal
+    |> order_by(:id)
+    |>Repo.all()
+    |> Repo.preload([
+      :statuses,
+      streaks: (from s in Streak, order_by: [desc: :end])
+    ])
+
   end
 
   @doc """
@@ -36,7 +43,7 @@ defmodule Unbreakable.Core do
 
   """
   def get_goal!(id) do
-    Repo.get!(Goal, id) |> Repo.preload([:statuses])
+    Repo.get!(Goal, id) |> Repo.preload([:statuses, :streaks])
   end
   @doc """
   Creates a goal.
@@ -199,21 +206,53 @@ defmodule Unbreakable.Core do
     Status.changeset(status, attrs)
   end
 
-  def reset_streak(%Goal{} = goal), do: update_goal(goal, %{streak: 0})
+  # def reset_streak(%Goal{} = goal), do: update_goal(goal, %{streak: 0})
 
-  def reset_streak(%Status{} = status) do
-    goal = get_goal!(status.goal_id)
-    update_goal(goal, %{streak: 0})
+  # def reset_streak(%Status{} = status) do
+  #   goal = get_goal!(status.goal_id)
+  #   update_goal(goal, %{streak: 0})
+  # end
+
+  # def increment_streak(%Goal{} = goal) do
+  #   goal_query = from Goal, where: [id: ^goal.id]
+  #   Repo.update_all(goal_query, inc: [streak: 1])
+  # end
+
+  # def increment_streak(%Status{} = status) do
+  #   goal_query = from Goal, where: [id: ^status.goal_id]
+  #   Repo.update_all(goal_query, inc: [streak: 1])
+  # end
+
+  def list_streaks do
+    Repo.all(Streak)
   end
 
-  def increment_streak(%Goal{} = goal) do
-    goal_query = from Goal, where: [id: ^goal.id]
-    Repo.update_all(goal_query, inc: [streak: 1])
+  # Queries to get a single streak from the DB
+  # Expensive to use for a listing of goals
+  def current_streak(goal_id) do
+    today = Date.utc_today()
+    case newest_streak(goal_id) do
+      %Streak{end: ^today, length: len} -> len
+      _ -> 0
+    end
   end
 
-  def increment_streak(%Status{} = status) do
-    goal_query = from Goal, where: [id: ^status.goal_id]
-    Repo.update_all(goal_query, inc: [streak: 1])
+  def newest_streak(goal_id) do
+    query = from s in Streak,
+    where: s.goal_id == ^goal_id,
+    preload: :goal,
+    order_by: [desc: s.end],
+    limit: 1
+    Repo.one!(query)
+  end
+
+  def longest_streak(goal_id) do
+    query = from s in Streak,
+    where: s.goal_id == ^goal_id,
+    preload: :goal,
+    order_by: [desc: s.length],
+    limit: 1
+    Repo.one!(query)
   end
 
 end

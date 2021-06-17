@@ -7,7 +7,7 @@
     <tr class="text-3xl text-purple-400">
       <td class="w-1/4"><%= goal.title%></td>
       <td class="w-full pl-12">
-        <div class="inline-block my-1 pl-4 bg-blue-400 rounded-r-md text-white" style="width: <%= bar_length(goal.streak) %>"><%= goal.streak %> </div>
+        <div class="inline-block my-1 pl-4 bg-blue-400 rounded-r-md text-white" style="<%= make_bar(goal) %>"><%= get_current_streak(goal) %> </div>
       </td>
     </tr>
     <% end %>

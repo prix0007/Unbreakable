@@ -18,12 +18,7 @@ defmodule UnbreakableWeb.StatusController do
   def create(conn, %{"status" => status_params}) do
     case Core.create_status(status_params) do
       {:ok, status} ->
-        today = Date.utc_today()
-        case status do
-          %{date: ^today, is_complete: true} -> Core.increment_streak(status)
-          %{date: ^today, is_complete: false} -> Core.reset_streak(status)
-          _ -> nil
-        end
+
         conn
         |> put_flash(:info, "Status created successfully.")
         |> redirect(to: Routes.status_path(conn, :show, status))
@@ -49,12 +44,7 @@ defmodule UnbreakableWeb.StatusController do
 
     case Core.update_status(status, status_params) do
       {:ok, status} ->
-        today = Date.utc_today()
-        case status do
-          %{date: ^today, is_complete: true} -> Core.increment_streak(status)
-          %{date: ^today, is_complete: false} -> Core.reset_streak(status)
-          _ -> nil
-        end
+
         conn
         |> put_flash(:info, "Status updated successfully.")
         |> redirect(to: Routes.status_path(conn, :show, status))
