@@ -4,18 +4,25 @@
   <p class="text-gray-700">(Consecutive days)</p>
   <table>
     <%= for goal <- @goals do %>
+      <% todays = get_today_status(goal) %>
       <tr class="text-3xl text-purple-400">
         <td class="w-1/4"><%= goal.title%></td>
         <td class="w-full pl-12">
           <div class="inline-block my-1 pl-4 bg-blue-400 rounded-r-md text-white" style="<%= make_bar(goal) %>">
             <%= get_current_streak(goal) %>
           </div>
-          <div class="inline-block ml-1 bg-purple-600 hover:bg-purple-500 text-white rounded-full w-9 text-center align-middle">
-            <a href="#">&#10003;</a>
-          </div>
-          <div class="inline-block ml-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-9 text-center align-middle">
-            <a href="#">X</a>
-          </div>
+          <%= if todays do %>
+            <span class="text-2xl align-text-bottom">
+              <%= if todays.is_complete, do: "😁 Good job! ", else: "😩😣"  %>
+            </span>
+          <% else %>
+            <div class="inline-block ml-1 bg-purple-600 hover:bg-purple-500 text-white rounded-full w-9 text-center align-middle">
+              <a href="#">&#10003;</a>
+            </div>
+            <div class="inline-block ml-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-9 text-center align-middle">
+              <a href="#">X</a>
+            </div>
+          <% end %>
         </td>
       </tr>
     <% end %>

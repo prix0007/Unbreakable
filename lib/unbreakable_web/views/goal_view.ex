@@ -25,4 +25,11 @@ defmodule UnbreakableWeb.GoalView do
     end
   end
 
+  def get_today_status(%Goal{statuses: []}), do: nil
+  def get_today_status(%Goal{statuses: statuses}) do
+    newest_status = if Enum.count(statuses) > 0, do: List.last(statuses), else: nil
+    (newest_status.date == Date.utc_today()) && newest_status
+  end
+
+
 end
