@@ -6,7 +6,7 @@ defmodule Unbreakable.Core do
   import Ecto.Query, warn: false
   alias Unbreakable.Repo
 
-  alias Unbreakable.Core.{Goal, Streak}
+  alias Unbreakable.Core.{Goal, Streak, Status}
 
   @doc """
   Returns the list of goals.
@@ -61,6 +61,29 @@ defmodule Unbreakable.Core do
     %Goal{}
     |> Goal.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def goal_complete(goal_id, date \\ Date.utc_today()) do
+    case Repo.get_by(Status, %{date: date, goal_id: goal_id}) do
+      nil ->
+        %Status{}
+        |> Status.changeset(%{date: date, goal_id: goal_id, is_complete: true})
+        |> Repo.insert()
+      %Status{} = status ->
+        update_status(status, %{is_complete: true})
+      end
+  end
+
+  def goal_incomplete(goal_id, date \\ Date.utc_today()) do
+
+    case Repo.get_by(Status, %{date: date, goal_id: goal_id}) do
+      nil ->
+        %Status{}
+        |> Status.changeset(%{date: date, goal_id: goal_id, is_complete: false})
+        |> Repo.insert()
+      %Status{} = status ->
+        update_status(status, %{is_complete: false})
+      end
   end
 
   @doc """
